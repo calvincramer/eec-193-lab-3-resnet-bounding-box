@@ -30,7 +30,7 @@ Then if you type:
 You should see `<container_name>` in the list of all containers
 Then start and attach to the container:
 
-`docker start <container_name>
+`docker start <container_name>  
 docker attach <container_name>`
 
 You should now be inside the running docker container.
@@ -75,8 +75,8 @@ Install the dependencies needed for PyTorch-YOLOv3
 
 If you want to use the YOLO model with pretrained weights, follow these steps:
 
-`apt-get install wget
-cd weights
+`apt-get install wget  
+cd weights  
 bash download_weights.sh`
 
 
