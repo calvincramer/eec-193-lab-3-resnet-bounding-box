@@ -12,11 +12,11 @@ to install `nvidia-docker`
 ### Get Ubuntu 16.0 docker image
 Get the docker image for the latest version of ubuntu using:
 
-`docker pull ubuntu:16.04`
+`$ docker pull ubuntu:16.04`
 
 Then make sure the image was pulled correctly by using:
 
-`docker images`
+`$ docker images`
 
 And you should see the `ubuntu` image with the tab `16.04` in the list.
 
@@ -24,22 +24,25 @@ And you should see the `ubuntu` image with the tab `16.04` in the list.
 ### Make container, start and attach
 Make the ubuntu docker container using:
 
-`docker container create -it --name <container_name> ubuntu /bin/bash`
+`$ docker container create -it --name <container_name> ubuntu /bin/bash`
 
-Then if you type:
+Where `<container_name>` can be whatever you want the name of the container to be. Then if you type:
 
-`docker ps -a`
+`$ docker ps -a`
 
 You should see `<container_name>` in the list of all containers
 Then start and attach to the container:
+
 ```
-docker start <container_name>
-docker attach <container_name>
+$ docker start <container_name>
+$ docker attach <container_name>
 ```
+
 If you would like to train on the GPU, instead run the container doing the following (not necessary to do until you are actually going to train):
+
 ```
-nvidia-docker start <container_name>
-nvidia-docker attach <container_name>
+$ nvidia-docker start <container_name>
+$ nvidia-docker attach <container_name>
 ```
 
 You should now be inside the running docker container.
@@ -48,84 +51,86 @@ If you don't see a shell prompt, press ctrl+c.
 ### Install git
 First of all, update the libraries that came within the container:
 
-`apt-get update`
+`$ apt-get update`
 
 Now install git:
 
-`apt-get install git`
+`$ apt-get install git`
 
 ### Install curl
 We need this to install anaconda
 
-`apt-get install curl`
+`$ apt-get install curl`
 
 ### Install anaconda
-Follow this [guide](https://www.digitalocean.com/community/tutorials/how-to-install-the-anaconda-python-distribution-on-ubuntu-16-04)
+Follow this [guide](https://www.digitalocean.com/community/tutorials/how-to-install-the-anaconda-python-distribution-on-ubuntu-16-04).
+
 You can stop after the `conda list` step.
 
 
 ## YOLOv3
 We will be using eriklindernoren's implementation of YOLOv3:
+
 Clone the git repository
 
-`git clone https://github.com/eriklindernoren/PyTorch-YOLOv3`
+`$ git clone https://github.com/eriklindernoren/PyTorch-YOLOv3`
 
-Were going to use pip to install numpy, torch, torchvision, pillow, and matplotlib
+Were going to use pip to install numpy, torch, torchvision, pillow, and matplotlib:
 
-`apt-get install python3-pip`
+`$ apt-get install python3-pip`
 
-Navigate into the repository we just clones
+Navigate into the repository we just cloned:
 
-`cd PyTorch-YOLOv3`
+`$ cd PyTorch-YOLOv3`
 
-Install the dependencies needed for PyTorch-YOLOv3
+Install the dependencies needed for PyTorch-YOLOv3:
 
-`pip3 install -r requirements.txt`
+`$ pip3 install -r requirements.txt`
 
 From some reason if torch is not installed if you type `conda list` then install torch using:
 
-`conda install -c soumith pytorch`
+`$ conda install -c soumith pytorch`
 
 And torch vision using:
 
-`conda install -c pytorch torchvision`
+`$ conda install -c pytorch torchvision`
 
 If you want to use the YOLO model with pretrained weights, follow these steps:
 ```
-apt-get install wget
-cd weights
-bash download_weights.sh
+$ apt-get install wget
+$ cd weights
+$ bash download_weights.sh
 ```
 
 #### Now dowload the COCO dataset:
 Make sure you are in the PyTorch-YOLOv3 base directory. If you are already in the weights folder just do
 
-`cd ..`
+`$ cd ..`
 
 Then navigate into the data directory:
 
-`cd data`
+`$ cd data`
 
 We need unzip to do the next step:
 
-`apt-get install unzip`
+`$ apt-get install unzip`
 
 Then download the dataset by:
 
-`bash get_coco_dataset.sh`
+`$ bash get_coco_dataset.sh`
 
 This will take a long time, since the dataset is 13GB, so grab a coffee now.
 
 Now before we train, we need to solve some error with QT:
 
-`apt install libgl1-mesa-glx`
+`$ apt install libgl1-mesa-glx`
 
 
 #### Training
 Now we can start training the YOLOv3 model on the COCO dataset.
 Make sure you are in the `PyTorch-YOLOv3` directory then do the following:
 
-`python train.py`
+`$ python train.py`
 
 YOLOv3 should use the COCO dataset and start traing. You should see the following if it is training successfully:
 
@@ -141,5 +146,69 @@ Now you just need to wait until it is finished training, which will be a while.
 
 ## Mask-RCNN
 
+We will be an implementation from Facebook: [repo](https://github.com/facebookresearch/maskrcnn-benchmark)
 
-CALVIN START HERE
+First download the docker file from the repository. You can either make an enviornment with or without jupyter notebook:
+* With juypter: maskrcnn-benchmark/docker/docker-jupyter/Dockerfile
+* Without jupyer: maskrcnn-benchmark/docker/Dockerfile
+
+Save the dockerfile as `Dockerfile`
+
+If you are using the jupyter notebook dockerfile, make sure you also download the `jupyter_notebook_config.py` file.
+
+Next we will build the docker image:
+
+`$ docker build -f DockerfileMaskRCNN -t mask-rcnn:facebook-mask-rcnn .
+`
+
+If the dockerfile was build sucessfully, typing `docker images`, you should see an image with name `mask-rcnn` and tag `facebook-mask-rcnn`
+
+Next build the docker container:
+
+`$ docker container create -it --name <container_name> mask-rcnn:facebook-mask-rcnn /bin/bash`
+
+If you are using port forwarding to access the jupyter notebook then use this:
+
+`$ nvidia-docker run --shm-size 8G -it --name <container_name> -p 8888:8888 --entrypoint=/bin/bash mask-rcnn:facebook-mask-rcnn`
+
+
+Then exit the container: `exit`
+
+
+### Download the COCO dataset
+
+We will use a shell script to make this easier:
+
+Download this file: 
+
+`$ https://github.com/pjreddie/darknet/tree/master/scripts/get_coco_dataset.sh`
+
+Then copy the file into the docker container:
+
+`$ nvidia-docker cp get_coco_dataset.sh cramer_mask_rcnn:/notebooks/get_coco_dataset.sh`
+
+Then start and attach to the container:
+
+```
+$ nvidia-docker start <container_name>
+$ nvidia-docker attach <container_name>
+```
+
+Then run the get COCO script:
+
+```
+$ apt-get install wget
+$ apt-get install unzip
+$ bash get_coco_dataset.sh
+```
+
+
+
+
+
+
+
+
+
+
+
