@@ -6,8 +6,8 @@ Install docker on your computer. Depending on your operating system, follow the 
 * Mac ->
 * Windows ->
 
-After that, if you would like to train on your Nvidia GPU, use the following guide:
-[guide](https://github.com/NVIDIA/nvidia-docker#quick-start)
+After that, if you would like to train on your Nvidia GPU, use the official [guide](https://github.com/NVIDIA/nvidia-docker#quick-start)
+to install `nvidia-docker`
 
 ### Get Ubuntu 16.0 docker image
 Get the docker image for the latest version of ubuntu using:
@@ -36,6 +36,12 @@ Then start and attach to the container:
 docker start <container_name>
 docker attach <container_name>
 ```
+If you would like to train on the GPU, instead run the container doing the following (not necessary to do until you are actually going to train):
+```
+nvidia-docker start <container_name>
+nvidia-docker attach <container_name>
+```
+
 You should now be inside the running docker container.
 If you don't see a shell prompt, press ctrl+c.
 
@@ -133,6 +139,7 @@ YOLOv3 should use the COCO dataset and start traing. You should see the followin
 
 Now you just need to wait until it is finished training, which will be a while.
 
-
-
 ## Mask-RCNN
+
+
+CALVIN START HERE
