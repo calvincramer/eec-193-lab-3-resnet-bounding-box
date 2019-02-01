@@ -6,6 +6,9 @@ Install docker on your computer. Depending on your operating system, follow the 
 * Mac ->
 * Windows ->
 
+After that, if you would like to train on your Nvidia GPU, use the following guide:
+[guide](https://github.com/NVIDIA/nvidia-docker#quick-start)
+
 ### Get Ubuntu 16.0 docker image
 Get the docker image for the latest version of ubuntu using:
 
@@ -73,6 +76,14 @@ Install the dependencies needed for PyTorch-YOLOv3
 
 `pip3 install -r requirements.txt`
 
+From some reason if torch is not installed if you type `conda list` then install torch using:
+
+`conda install -c soumith pytorch`
+
+And torch vision using:
+
+`conda install -c pytorch torchvision`
+
 If you want to use the YOLO model with pretrained weights, follow these steps:
 ```
 apt-get install wget
@@ -97,22 +108,31 @@ Then download the dataset by:
 
 `bash get_coco_dataset.sh`
 
-This will take a long time, since the dataset is 13GB, So grab a coffee now.
+This will take a long time, since the dataset is 13GB, so grab a coffee now.
+
+Now before we train, we need to solve some error with QT:
+
+`apt install libgl1-mesa-glx`
 
 
 #### Training
 Now we can start training the YOLOv3 model on the COCO dataset.
-Use the following:
+Make sure you are in the `PyTorch-YOLOv3` directory then do the following:
 
-`train.py [-h] [--epochs EPOCHS] [--image_folder IMAGE_FOLDER]
-                [--batch_size BATCH_SIZE]
-                [--model_config_path MODEL_CONFIG_PATH]
-                [--data_config_path DATA_CONFIG_PATH]
-                [--weights_path WEIGHTS_PATH] [--class_path CLASS_PATH]
-                [--conf_thres CONF_THRES] [--nms_thres NMS_THRES]
-                [--n_cpu N_CPU] [--img_size IMG_SIZE]
-                [--checkpoint_interval CHECKPOINT_INTERVAL]
-                [--checkpoint_dir CHECKPOINT_DIR]`
+`python train.py`
+
+YOLOv3 should use the COCO dataset and start traing. You should see the following if it is training successfully:
+
+```
+[Epoch 0/30, Batch 0/7329] [Losses: x 0.287326, y 0.253497, w 3.449932, h 5.507586, conf 4.123625, cls 0.821795, total 14.443762, recall: 0.00402, precision: 0.00001]
+[Epoch 0/30, Batch 1/7329] [Losses: x 0.275898, y 0.270465, w 5.844891, h 11.642635, conf 4.051937, cls 0.819050, total 22.904877, recall: 0.00000, precision: 0.00000]
+[Epoch 0/30, Batch 2/7329] [Losses: x 0.290545, y 0.242395, w 10.648568, h 11.280510, conf 3.956580, cls 0.816539, total 27.235136, recall: 0.01010, precision: 0.00029]
+[Epoch 0/30, Batch 3/7329] [Losses: x 0.276022, y 0.271325, w 5.613185, h 5.836898, conf 3.962628, cls 0.816571, total 16.776630, recall: 0.00000, precision: 0.00000]
+....
+```
+
+Now you just need to wait until it is finished training, which will be a while.
+
 
 
 ## Mask-RCNN
