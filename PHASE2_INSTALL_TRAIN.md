@@ -29,10 +29,10 @@ Then if you type:
 
 You should see `<container_name>` in the list of all containers
 Then start and attach to the container:
-
-`docker start <container_name>  
-docker attach <container_name>`
-
+```
+docker start <container_name>
+docker attach <container_name>
+```
 You should now be inside the running docker container.
 If you don't see a shell prompt, press ctrl+c.
 
@@ -74,11 +74,11 @@ Install the dependencies needed for PyTorch-YOLOv3
 `pip3 install -r requirements.txt`
 
 If you want to use the YOLO model with pretrained weights, follow these steps:
-
-`apt-get install wget  
-cd weights  
-bash download_weights.sh`
-
+```
+apt-get install wget
+cd weights
+bash download_weights.sh
+```
 
 #### Now dowload the COCO dataset:
 Make sure you are in the PyTorch-YOLOv3 base directory. If you are already in the weights folder just do
