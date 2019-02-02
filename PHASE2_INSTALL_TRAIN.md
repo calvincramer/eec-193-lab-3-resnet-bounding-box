@@ -222,7 +222,6 @@ Make sure you are in the `/notebooks/maskrcnn-benchmark/` folder
 
 ```
 # symlink the coco dataset
-cd ~/github/maskrcnn-benchmark
 mkdir -p datasets/coco
 ln -s /notebooks/coco/annotations datasets/coco/annotations
 ln -s /notebooks/coco/images/train2014 datasets/coco/train2014
