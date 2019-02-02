@@ -200,7 +200,7 @@ Download this file:
 
 Then copy the file into the docker container:
 
-`$ nvidia-docker cp get_coco_dataset.sh cramer_mask_rcnn:/notebooks/get_coco_dataset.sh`
+`$ nvidia-docker cp get_coco_dataset.sh <container_name>:/notebooks/get_coco_dataset.sh`
 
 Then start and attach to the container:
 
@@ -264,3 +264,6 @@ Make sure you are in the `/notebooks/maskrcnn-benchmark` folder, then download f
 
 
 
+YOLO
+detect.py
+python3 detect.py -image_folder /data/samples
