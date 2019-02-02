@@ -63,9 +63,19 @@ We need this to install anaconda
 `$ apt-get install curl`
 
 ### Install anaconda
-Follow this [guide](https://www.digitalocean.com/community/tutorials/how-to-install-the-anaconda-python-distribution-on-ubuntu-16-04).
+We will be following this [guide](https://www.digitalocean.com/community/tutorials/how-to-install-the-anaconda-python-distribution-on-ubuntu-16-04). You can stop after the `conda list` step.
 
-You can stop after the `conda list` step.
+The guide is summarized below:
+
+Run these commands line by line:
+```
+$ cd /tmp
+$ curl -O https://repo.continuum.io/archive/Anaconda3-5.0.1-Linux-x86_64.sh
+$ bash Anaconda3-5.0.1-Linux-x86_64.sh
+```
+
+Then press enter until you get to then end of the liscence, they type `yes`
+
 
 
 ## YOLOv3
@@ -144,6 +154,12 @@ YOLOv3 should use the COCO dataset and start traing. You should see the followin
 
 Now you just need to wait until it is finished training, which will be a while.
 
+### Run a test image, and find all vehicles
+
+
+
+
+
 ## Mask-RCNN
 
 We will be an implementation from Facebook: [repo](https://github.com/facebookresearch/maskrcnn-benchmark)
@@ -153,6 +169,8 @@ First download the docker file from the repository. You can either make an envio
 * Without jupyer: maskrcnn-benchmark/docker/Dockerfile
 
 Save the dockerfile as `Dockerfile`
+
+WARNING: make sure to match the cuda version and cudann version in the first few lines of the dockerfile with the machine you are running. Check your machine cuda version using `nvcc --version`
 
 If you are using the jupyter notebook dockerfile, make sure you also download the `jupyter_notebook_config.py` file.
 
@@ -164,10 +182,7 @@ Next we will build the docker image:
 If the dockerfile was build sucessfully, typing `docker images`, you should see an image with name `mask-rcnn` and tag `facebook-mask-rcnn`
 
 Next build the docker container:
-
-`$ docker container create -it --name <container_name> mask-rcnn:facebook-mask-rcnn /bin/bash`
-
-If you are using port forwarding to access the jupyter notebook then use this:
+If you are using port forwarding to access the jupyter notebook then use the `-p 8888:8888` flag, otherwise, don't use it:
 
 `$ nvidia-docker run --shm-size 8G -it --name <container_name> -p 8888:8888 --entrypoint=/bin/bash mask-rcnn:facebook-mask-rcnn`
 
@@ -202,8 +217,45 @@ $ apt-get install unzip
 $ bash get_coco_dataset.sh
 ```
 
+Then we will link the COCO dataset with the model.
+Make sure you are in the `/notebooks/maskrcnn-benchmark/` folder
+
+```
+# symlink the coco dataset
+cd ~/github/maskrcnn-benchmark
+mkdir -p datasets/coco
+ln -s /notebooks/coco/annotations datasets/coco/annotations
+ln -s /notebooks/coco/images/train2014 datasets/coco/train2014
+ln -s /notebooks/coco/images/test2014 datasets/coco/test2014  -- DONT HAVE
+ln -s /notebooks/coco/images/val2014 datasets/coco/val2014
+```
+
+If you mess up and one of the `ln` commands says the file already exists, use the `-f` flag to replace the destination link.
+
+We need one more file for training that was not downloaded. Download it from here:
+
+`https://dl.fbaipublicfiles.com/detectron/coco/coco_annotations_minival.tgz`
+
+This will download a .tgz file. Extract this and get the `instances_valminusminival2014.json` file.
+Do this with:
+
+`tar -xzf coco_annotations_minival.tgz`
+
+This creates a `annotations` folder. Inside this folder is the `instances_valminusminival2014.json` file.
+
+Place this file in `/notebooks/maskrcnn-benchmark/datasets/coco/annotations`
 
 
+#### Training
+
+Make sure you are in the `/notebooks/maskrcnn-benchmark` folder, then download from:
+
+`python tools/train_net.py --config-file configs/e2e_faster_rcnn_R_50_C4_1x.yaml`
+
+
+
+
+### Run a test image, and find all vehicles
 
 
 
