@@ -24,9 +24,9 @@ And you should see the `ubuntu` image with the tab `16.04` in the list.
 ### Make container, start and attach
 Make the ubuntu docker container using:
 
-`$ docker container create -it --name <container_name> ubuntu /bin/bash`
+`$ docker container create -it --name <container_name> -p 8888:8888 ubuntu /bin/bash`
 
-Where `<container_name>` can be whatever you want the name of the container to be. Then if you type:
+Where `<container_name>` can be whatever you want the name of the container to be. You can exclude the `-p 8888:8888` flag if you aren't going to use juypter notebooks remotely. Then if you type:
 
 `$ docker ps -a`
 
@@ -156,9 +156,9 @@ Now you just need to wait until it is finished training, which will be a while.
 
 ### Run a test image, and find all vehicles
 
+Put your images in the `/data/samples` folder, then run the following command:
 
-
-
+`python3 detect.py -image_folder /data/samples`
 
 ## Mask-RCNN
 
@@ -251,18 +251,9 @@ Make sure you are in the `/notebooks/maskrcnn-benchmark` folder, then download f
 
 `python tools/train_net.py --config-file configs/e2e_faster_rcnn_R_50_C4_1x.yaml`
 
-
-
+The training process should begin.
 
 ### Run a test image, and find all vehicles
 
-
-
-
-
-
-
-
-YOLO
-detect.py
-python3 detect.py -image_folder /data/samples
+Refer to the following demo juypter notebook in order to run your own images through a pretrained mask-rcnn model:
+[guide](https://github.com/facebookresearch/maskrcnn-benchmark/blob/master/demo/Mask_R-CNN_demo.ipynb)
