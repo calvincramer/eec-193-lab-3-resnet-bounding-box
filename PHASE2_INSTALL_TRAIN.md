@@ -158,7 +158,7 @@ Now you just need to wait until it is finished training, which will be a while.
 
 Put your images in the `/data/samples` folder, then run the following command:
 
-`python3 detect.py -image_folder /data/samples`
+`python3 detect.py --image_folder /data/samples`
 
 ## Mask-RCNN
 
